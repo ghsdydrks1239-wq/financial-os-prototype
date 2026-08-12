@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Financial OS READ LIST updater
+ * Financial OS CORE / RADAR updater
  *
  * Standalone Node.js script. It uses public RSS feeds and the public OpenAI API
  * only; it does not depend on Manus services, browser state, databases, or jobs.
@@ -25,6 +25,7 @@ const isHelp = args.has("--help") || args.has("-h");
 const defaultModel = "gpt-4.1-mini";
 const maxPerFeed = 40;
 const maxCandidatesForModel = 100;
+const maxRadarItems = 25;
 const timeoutMs = 15_000;
 
 const relevantKeywords = [
@@ -44,13 +45,13 @@ const parser = new XMLParser({
 
 function printHelp() {
   console.log(`
-Financial OS READ LIST updater
+Financial OS CORE / RADAR updater
 
 Usage:
-  pnpm update:read-list       # RSS 수집 → OpenAI 선별 → read-list.json 교체
+  pnpm update:read-list       # RSS 수집 → RADAR 생성 → OpenAI CORE 5개 선별 → read-list.json 교체
   pnpm check:read-list-rss    # RSS 수집·중복 제거만 점검 (API key 불필요)
   node --env-file=.env scripts/update-read-list.mjs --dry-run
-                              # OpenAI 결과를 화면에만 출력 (파일 미교체)
+                              # RADAR + CORE 결과를 화면에만 출력 (파일 미교체)
 `);
 }
 
@@ -139,6 +140,11 @@ function scoreCandidate(article) {
   return relevantKeywords.reduce((score, keyword) => score + Number(searchable.includes(keyword.toLowerCase())), 0);
 }
 
+function isRadarArticle(article) {
+  if (article.section === "경제" || article.section === "증권") return true;
+  return scoreCandidate(article) > 0;
+}
+
 async function fetchText(url) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -187,13 +193,27 @@ async function collectArticles(feeds) {
     if (!byUrl.has(article.url)) byUrl.set(article.url, article);
   }
 
-  const articles = [...byUrl.values()]
+  const deduped = [...byUrl.values()];
+
+  const radar = deduped
+    .filter(isRadarArticle)
+    .sort((left, right) => Date.parse(right.publishedAt) - Date.parse(left.publishedAt))
+    .slice(0, maxRadarItems)
+    .map((article) => ({
+      source: article.source,
+      section: article.section,
+      title: article.title,
+      url: article.url,
+      publishedAt: article.publishedAt
+    }));
+
+  const articles = deduped
     .map((article) => ({ ...article, relevance: scoreCandidate(article) }))
     .filter((article) => article.relevance > 0)
     .sort((left, right) => right.relevance - left.relevance || Date.parse(right.publishedAt) - Date.parse(left.publishedAt));
 
   if (!articles.length) throw new Error("RSS에서 금융시장 관련 기사 후보를 찾지 못했습니다.");
-  return { rawCount: raw.length, articles };
+  return { rawCount: raw.length, radar, articles };
 }
 
 function readListSchema() {
@@ -308,7 +328,7 @@ async function selectWithOpenAI(date, candidates) {
   return JSON.parse(content);
 }
 
-function validateAndBuildReadList(date, selection, candidates) {
+function validateAndBuildReadList(date, radar, selection, candidates) {
   if (!Array.isArray(selection?.items) || selection.items.length !== 5) {
     throw new Error("OpenAI 결과에 정확히 5개 항목이 없습니다. 기존 read-list.json은 변경하지 않았습니다.");
   }
@@ -345,7 +365,7 @@ function validateAndBuildReadList(date, selection, candidates) {
     };
   });
 
-  return { date, items };
+  return { date, radar, items };
 }
 
 async function writeAtomically(filePath, data) {
@@ -362,18 +382,18 @@ async function main() {
     throw new Error("RSS 소스 설정 파일에 feeds가 없습니다.");
   }
 
-  const { rawCount, articles } = await collectArticles(sourceConfig.feeds);
+  const { rawCount, radar, articles } = await collectArticles(sourceConfig.feeds);
   const candidates = articles.slice(0, maxCandidatesForModel).map(({ relevance, ...article }) => article);
-  console.log(`RSS 수집 완료: 원본 ${rawCount}건 → URL 중복 제거·금융시장 관련성 필터 ${articles.length}건 → AI 후보 ${candidates.length}건`);
+  console.log(`RSS 수집 완료: 원본 ${rawCount}건 → RADAR ${radar.length}건 → 금융시장 관련성 필터 ${articles.length}건 → AI 후보 ${candidates.length}건`);
 
   if (isCollectOnly) {
-    console.log(JSON.stringify(candidates.slice(0, 10), null, 2));
+    console.log(JSON.stringify({ radar, coreCandidates: candidates.slice(0, 10) }, null, 2));
     return;
   }
 
   const date = formatKoreaDate();
   const selection = await selectWithOpenAI(date, candidates);
-  const readList = validateAndBuildReadList(date, selection, candidates);
+  const readList = validateAndBuildReadList(date, radar, selection, candidates);
 
   if (isDryRun) {
     console.log(JSON.stringify(readList, null, 2));
@@ -382,7 +402,7 @@ async function main() {
   }
 
   await writeAtomically(targetFile, readList);
-  console.log(`완료: ${targetFile} 파일을 ${date} READ LIST 5개 항목으로 교체했습니다.`);
+  console.log(`완료: ${targetFile} 파일을 ${date} RADAR ${radar.length}개 + CORE 5개 항목으로 교체했습니다.`);
 }
 
 main().catch((error) => {

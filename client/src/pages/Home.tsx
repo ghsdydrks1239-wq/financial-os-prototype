@@ -5,15 +5,12 @@
  */
 import { useState } from "react";
 import {
-  ArrowUpRight,
   BookOpen,
-  CheckCircle2,
   ChevronRight,
   CircleAlert,
   Clock3,
   ExternalLink,
   FileText,
-  Layers3,
   ListChecks,
   Newspaper,
   Sparkles,
@@ -21,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { coreItems, marketIssues, marketVariables, radarItems, readListDate, todayMarket, type ArticleLink, type Priority } from "@/data/brief";
+import { coreItems, radarItems, readListDate, type ArticleLink, type Priority } from "@/data/brief";
 import { loadReadArticleIds, saveReadArticleIds } from "@/lib/readState";
 
 const priorityClass: Record<Priority, string> = {
@@ -167,51 +164,15 @@ function CoreList() {
   );
 }
 
-function MarketBrief() {
-  return (
-    <TabsContent value="market" className="tab-content mt-0 focus-visible:outline-none">
-      <section className="banner banner-market">
-        <div className="banner-copy">
-          <p className="eyebrow"><Layers3 size={13} /> MARKET MORNING NOTE</p>
-          <h2>움직임보다<br />구조를 읽습니다.</h2>
-          <p className="banner-desc">금리·환율·AI 투자 사이클의 연결고리가 오늘의 위험 선호를 가늠하는 핵심입니다.</p>
-        </div>
-        <div className="market-stamp"><span>MARKET</span><strong>BRIEF</strong><i>샘플 · 2026.08.12</i></div>
-      </section>
-
-      <section className="today-market" aria-labelledby="today-market-title">
-        <div className="section-title-block"><p className="section-kicker">OPENING VIEW</p><h3 id="today-market-title">Today’s Market</h3></div>
-        <div className="market-sentences">{todayMarket.map((sentence, index) => <p key={sentence}><b>0{index + 1}</b> {sentence}</p>)}</div>
-      </section>
-
-      <section className="variables-section" aria-labelledby="variables-title">
-        <div className="section-title-block"><p className="section-kicker">SIGNAL BOARD</p><h3 id="variables-title">핵심 시장 변수 3개</h3></div>
-        <div className="variable-list">
-          {marketVariables.map((variable, index) => <div className="variable-item" key={variable.label}><span className="variable-no">0{index + 1}</span><div><span>{variable.label}</span><strong>{variable.value}</strong><p>{variable.note}</p></div></div>)}
-        </div>
-      </section>
-
-      <div className="content-heading brief-heading"><div><p className="section-kicker">TOP 5 MARKET ISSUES</p><h3>오늘의 이슈 체크리스트</h3></div><p>사실과 해석, 확인할 변수를 분리해 기록합니다.</p></div>
-      <div className="issues-list">
-        {marketIssues.map((issue, index) => (
-          <article className="market-issue" key={issue.id}>
-            <div className="issue-left"><span>0{index + 1}</span><PriorityBadge value={issue.priority} /></div>
-            <div className="issue-body"><h4>{issue.title}</h4><div className="issue-grid"><div><p className="issue-label">FACT</p><p>{issue.fact}</p></div><div><p className="issue-label">MARKET VIEW</p><p>{issue.view}</p></div></div><div className="issue-bottom"><div><p className="issue-label">MARKET VARIABLES</p><div className="variable-tags">{issue.variables.map((variable) => <span key={variable}>{variable}</span>)}</div></div><div className="check-block"><p className="issue-label"><CheckCircle2 size={13} /> CHECK</p><p>{issue.check}</p></div></div></div>
-          </article>
-        ))}
-      </div>
-    </TabsContent>
-  );
-}
-
 export default function Home() {
   const today = new Intl.DateTimeFormat("ko-KR", { month: "long", day: "numeric", weekday: "short" }).format(new Date(`${readListDate}T00:00:00+09:00`));
+
   return (
     <main className="app-shell">
       <aside className="desk-rail">
         <div className="rail-brand"><div className="brand-mark-wrap"><img src="/manus-storage/financial-os-mark_f1255e5c.png" alt="Financial OS 브랜드 심볼" /><i /></div><div className="brand-label"><b>FINANCIAL OS</b><small>RESEARCH DESK</small></div></div>
         <div className="rail-date"><p>DAILY DESK</p><strong>{today}</strong><span>Financial OS</span></div>
-        <div className="rail-note"><Clock3 size={15} /><p><b>넓게 훑고</b><br />핵심을 읽은 뒤<br />시장으로 연결합니다.</p></div>
+        <div className="rail-note"><Clock3 size={15} /><p><b>넓게 훑고</b><br />핵심을 읽습니다.</p></div>
         <div className="rail-bottom"><span className="status-dot" /> DAILY NEWS MODE</div>
       </aside>
 
@@ -219,21 +180,21 @@ export default function Home() {
         <header className="workspace-header">
           <div className="mobile-brand"><div className="brand-mark-wrap"><img src="/manus-storage/financial-os-mark_f1255e5c.png" alt="" /><i /></div><div><strong>FINANCIAL OS</strong><time dateTime={readListDate}>{today}</time></div></div>
           <p><span className="live-dot" /> MORNING EDITION · 07:30 KST</p>
-          <div className="header-note"><CircleAlert size={14} /> NEWS 자동 업데이트 · MARKET BRIEF 샘플</div>
+          <div className="header-note"><CircleAlert size={14} /> RADAR · CORE 자동 업데이트</div>
         </header>
+
         <Tabs defaultValue="radar" className="brief-tabs">
           <div className="tab-nav-wrap">
             <TabsList className="tab-nav">
               <TabsTrigger value="radar"><Newspaper size={16} /> RADAR</TabsTrigger>
               <TabsTrigger value="core"><ListChecks size={16} /> CORE</TabsTrigger>
-              <TabsTrigger value="market"><ArrowUpRight size={16} /> MARKET BRIEF</TabsTrigger>
             </TabsList>
           </div>
           <RadarView />
           <CoreList />
-          <MarketBrief />
         </Tabs>
-        <footer className="workspace-footer"><span>FINANCIAL OS / RESEARCH DESK</span><span>RADAR·CORE는 RSS/API 자동 업데이트 · MARKET BRIEF는 현재 샘플입니다.</span></footer>
+
+        <footer className="workspace-footer"><span>FINANCIAL OS / RESEARCH DESK</span><span>RADAR·CORE는 RSS/API로 매일 자동 업데이트됩니다.</span></footer>
       </div>
     </main>
   );

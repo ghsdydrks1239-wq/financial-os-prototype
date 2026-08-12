@@ -2,11 +2,6 @@ name: Update READ LIST
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - .github/run-news-now
   schedule:
     - cron: '30 7 * * *'
       timezone: 'Asia/Seoul'

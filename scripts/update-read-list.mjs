@@ -140,6 +140,34 @@ function scoreCandidate(article) {
   return relevantKeywords.reduce((score, keyword) => score + Number(searchable.includes(keyword.toLowerCase())), 0);
 }
 
+function extractRadarKeywords(article) {
+  const title = article.title.toLowerCase();
+  const summary = article.summary.toLowerCase();
+  return relevantKeywords
+    .filter((keyword) => title.includes(keyword.toLowerCase()) || summary.includes(keyword.toLowerCase()))
+    .sort((left, right) => {
+      const leftInTitle = title.includes(left.toLowerCase()) ? 1 : 0;
+      const rightInTitle = title.includes(right.toLowerCase()) ? 1 : 0;
+      if (leftInTitle !== rightInTitle) return rightInTitle - leftInTitle;
+      return right.length - left.length;
+    })
+    .slice(0, 3);
+}
+
+function buildRadarSummary(article) {
+  const summary = article.summary.trim();
+  if (!summary) return "";
+
+  const normalizedTitle = article.title.replace(/\s+/g, " ").trim();
+  let cleaned = summary.replace(/\s+/g, " ").trim();
+  if (cleaned.startsWith(normalizedTitle)) {
+    cleaned = cleaned.slice(normalizedTitle.length).replace(/^[\s\-–—:·|]+/, "").trim();
+  }
+
+  if (!cleaned || cleaned === normalizedTitle) return "";
+  return truncate(cleaned, 150);
+}
+
 function isRadarArticle(article) {
   if (article.section === "경제" || article.section === "증권") return true;
   return scoreCandidate(article) > 0;
@@ -204,7 +232,9 @@ async function collectArticles(feeds) {
       section: article.section,
       title: article.title,
       url: article.url,
-      publishedAt: article.publishedAt
+      publishedAt: article.publishedAt,
+      keywords: extractRadarKeywords(article),
+      summary: buildRadarSummary(article)
     }));
 
   const articles = deduped

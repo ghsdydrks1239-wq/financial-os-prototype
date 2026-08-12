@@ -3,12 +3,10 @@ name: Update READ LIST
 on:
   workflow_dispatch:
   schedule:
-    - cron: '30 7 * * *'
-      timezone: 'Asia/Seoul'
-    - cron: '45 7 * * *'
-      timezone: 'Asia/Seoul'
-    - cron: '0 8 * * *'
-      timezone: 'Asia/Seoul'
+    # 07:30 / 07:45 / 08:00 KST = 22:30 / 22:45 / 23:00 UTC (previous UTC day)
+    - cron: '30 22 * * *'
+    - cron: '45 22 * * *'
+    - cron: '0 23 * * *'
 
 permissions:
   contents: write

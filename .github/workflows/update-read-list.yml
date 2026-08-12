@@ -2,9 +2,6 @@ name: Update READ LIST
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - '.github/run-gpt56-news-test'
   schedule:
     - cron: '30 7 * * *'
       timezone: 'Asia/Seoul'

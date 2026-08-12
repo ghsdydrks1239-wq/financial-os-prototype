@@ -5,9 +5,17 @@ on:
   schedule:
     - cron: '30 7 * * *'
       timezone: 'Asia/Seoul'
+    - cron: '45 7 * * *'
+      timezone: 'Asia/Seoul'
+    - cron: '0 8 * * *'
+      timezone: 'Asia/Seoul'
 
 permissions:
   contents: write
+
+concurrency:
+  group: update-read-list
+  cancel-in-progress: false
 
 jobs:
   update-read-list:
@@ -22,20 +30,47 @@ jobs:
         with:
           node-version: 24
 
+      - name: Check whether today's scheduled update is already complete
+        id: freshness
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" != "schedule" ]; then
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            echo "Manual run requested. Running update regardless of today's existing data."
+            exit 0
+          fi
+
+          TODAY=$(TZ=Asia/Seoul date +%F)
+          DATA_DATE=$(node -e "const fs=require('fs'); try { const j=JSON.parse(fs.readFileSync('client/src/data/read-list.json','utf8')); process.stdout.write(j.date || '') } catch { process.stdout.write('') }")
+
+          if [ "$DATA_DATE" = "$TODAY" ]; then
+            echo "Today's data already exists ($TODAY). Skipping this backup run."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Today's data is missing or stale (found: ${DATA_DATE:-none}, expected: $TODAY). Running update."
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Set up pnpm
+        if: steps.freshness.outputs.skip != 'true'
         uses: pnpm/action-setup@v4
         with:
           run_install: false
 
       - name: Install dependencies
+        if: steps.freshness.outputs.skip != 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Update READ LIST
+        if: steps.freshness.outputs.skip != 'true'
         run: pnpm update:read-list
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
       - name: Commit updated READ LIST
+        if: steps.freshness.outputs.skip != 'true'
         run: |
           if git diff --quiet -- client/src/data/read-list.json; then
             echo "No READ LIST changes to commit."

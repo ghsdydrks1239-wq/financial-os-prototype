@@ -63,14 +63,14 @@ function RadarView() {
         <div className="banner-copy">
           <p className="eyebrow"><Newspaper size={13} /> DAILY NEWS RADAR</p>
           <h2>먼저 넓게 보고<br />오늘의 흐름을 잡습니다.</h2>
-          <p className="banner-desc">경제·증권 기사는 폭넓게, 국제 기사는 금융시장 관련성을 기준으로 느슨하게 모았습니다. 제목과 핵심 맥락을 빠르게 훑고 관심 가는 기사만 원문으로 확인하세요.</p>
+          <p className="banner-desc">경제·금융 관련 후보에서 잡음을 한 번 걷어내고, 제목·키워드·AI 한 줄 요약으로 빠르게 훑습니다. 관심 가는 기사만 원문으로 확인하세요.</p>
         </div>
         <div className="market-stamp"><span>NEWS</span><strong>RADAR</strong><i>{radarItems.length || "—"} HEADLINES</i></div>
       </section>
 
       <div className="content-heading">
         <div><p className="section-kicker">RADAR · {String(radarItems.length).padStart(2, "0")} HEADLINES</p><h3>경제·금융 헤드라인 훑기</h3></div>
-        <p>키워드와 RSS 한 줄 요약은 빠른 맥락 파악을 위한 보조 정보입니다.</p>
+        <p>키워드와 AI 한 줄 요약은 빠른 맥락 파악을 위한 보조 정보입니다.</p>
       </div>
 
       {radarItems.length > 0 ? (

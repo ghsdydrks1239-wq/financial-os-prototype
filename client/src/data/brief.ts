@@ -13,6 +13,14 @@ export type ArticleLink = {
   url: string | null;
 };
 
+export type RadarItem = {
+  source: string;
+  section: string;
+  title: string;
+  url: string;
+  publishedAt: string;
+};
+
 export type ReadItem = {
   id: string;
   priority: Priority;
@@ -42,7 +50,9 @@ export type MarketIssue = {
 };
 
 export const readListDate = readListJson.date as string;
-export const readItems = readListJson.items as ReadItem[];
+export const radarItems = ((readListJson as { radar?: RadarItem[] }).radar ?? []) as RadarItem[];
+export const coreItems = readListJson.items as ReadItem[];
+export const readItems = coreItems;
 export const todayMarket = marketBriefJson.todayMarket as string[];
 export const marketVariables = marketBriefJson.marketVariables as MarketVariable[];
 export const marketIssues = marketBriefJson.marketIssues as MarketIssue[];

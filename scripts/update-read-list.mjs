@@ -22,9 +22,11 @@ const args = new Set(process.argv.slice(2));
 const isCollectOnly = args.has("--collect-only");
 const isDryRun = args.has("--dry-run");
 const isHelp = args.has("--help") || args.has("-h");
-const defaultModel = "gpt-4.1-mini";
+
+const defaultRadarModel = "gpt-5.6-luna";
+const defaultCoreModel = "gpt-5.6-terra";
 const maxPerFeed = 40;
-const maxCandidatesForModel = 100;
+const maxRadarCandidatesForModel = 120;
 const maxRadarItems = 25;
 const timeoutMs = 15_000;
 
@@ -32,7 +34,8 @@ const relevantKeywords = [
   "금리", "채권", "국채", "환율", "외환", "원화", "달러", "코스피", "코스닥", "주식", "증권",
   "ETF", "ETN", "선물", "옵션", "파생", "신용", "대출", "유동성", "회사채", "CP", "은행", "금융",
   "한국은행", "연준", "FOMC", "CPI", "물가", "고용", "GDP", "수출", "무역", "반도체", "AI", "엔비디아",
-  "실적", "자금조달", "규제", "스프레드", "신용평가", "IPO", "공모", "변동성"
+  "실적", "자금조달", "규제", "스프레드", "신용평가", "IPO", "공모", "변동성", "관세", "부동산", "원자재",
+  "유가", "M&A", "인수", "합병", "투자", "산업", "경기", "소비", "가계부채", "재정"
 ];
 
 const parser = new XMLParser({
@@ -48,10 +51,14 @@ function printHelp() {
 Financial OS CORE / RADAR updater
 
 Usage:
-  pnpm update:read-list       # RSS 수집 → RADAR 생성 → OpenAI CORE 5개 선별 → read-list.json 교체
-  pnpm check:read-list-rss    # RSS 수집·중복 제거만 점검 (API key 불필요)
+  pnpm update:read-list       # RSS 수집 → GPT-5.6 Luna RADAR 선별·요약 → GPT-5.6 Terra CORE 5개 선별 → JSON 교체
+  pnpm check:read-list-rss    # RSS 수집·중복 제거·RADAR AI 후보만 점검 (API key 불필요)
   node --env-file=.env scripts/update-read-list.mjs --dry-run
                               # RADAR + CORE 결과를 화면에만 출력 (파일 미교체)
+
+Optional model overrides:
+  OPENAI_RADAR_MODEL          # 기본값: gpt-5.6-luna
+  OPENAI_CORE_MODEL           # 기본값: gpt-5.6-terra
 `);
 }
 
@@ -140,35 +147,8 @@ function scoreCandidate(article) {
   return relevantKeywords.reduce((score, keyword) => score + Number(searchable.includes(keyword.toLowerCase())), 0);
 }
 
-function extractRadarKeywords(article) {
-  const title = article.title.toLowerCase();
-  const summary = article.summary.toLowerCase();
-  return relevantKeywords
-    .filter((keyword) => title.includes(keyword.toLowerCase()) || summary.includes(keyword.toLowerCase()))
-    .sort((left, right) => {
-      const leftInTitle = title.includes(left.toLowerCase()) ? 1 : 0;
-      const rightInTitle = title.includes(right.toLowerCase()) ? 1 : 0;
-      if (leftInTitle !== rightInTitle) return rightInTitle - leftInTitle;
-      return right.length - left.length;
-    })
-    .slice(0, 3);
-}
-
-function buildRadarSummary(article) {
-  const summary = article.summary.trim();
-  if (!summary) return "";
-
-  const normalizedTitle = article.title.replace(/\s+/g, " ").trim();
-  let cleaned = summary.replace(/\s+/g, " ").trim();
-  if (cleaned.startsWith(normalizedTitle)) {
-    cleaned = cleaned.slice(normalizedTitle.length).replace(/^[\s\-–—:·|]+/, "").trim();
-  }
-
-  if (!cleaned || cleaned === normalizedTitle) return "";
-  return truncate(cleaned, 150);
-}
-
-function isRadarArticle(article) {
+function isBroadRadarCandidate(article) {
+  // 경제·증권은 넓게 열어두고, 국제는 경제·금융 연결고리가 있는 기사만 1차 통과시킨다.
   if (article.section === "경제" || article.section === "증권") return true;
   return scoreCandidate(article) > 0;
 }
@@ -180,7 +160,7 @@ async function fetchText(url) {
     const response = await fetch(url, {
       signal: controller.signal,
       headers: {
-        "User-Agent": "FinancialOSReadListUpdater/1.0 (+RSS reader; contact: local-user)",
+        "User-Agent": "FinancialOSReadListUpdater/2.0 (+RSS reader; contact: local-user)",
         Accept: "application/rss+xml, application/xml, text/xml, application/atom+xml, text/plain, */*"
       }
     });
@@ -222,28 +202,92 @@ async function collectArticles(feeds) {
   }
 
   const deduped = [...byUrl.values()];
-
-  const radar = deduped
-    .filter(isRadarArticle)
+  const radarCandidates = deduped
+    .filter(isBroadRadarCandidate)
     .sort((left, right) => Date.parse(right.publishedAt) - Date.parse(left.publishedAt))
-    .slice(0, maxRadarItems)
-    .map((article) => ({
-      source: article.source,
-      section: article.section,
-      title: article.title,
-      url: article.url,
-      publishedAt: article.publishedAt,
-      keywords: extractRadarKeywords(article),
-      summary: buildRadarSummary(article)
-    }));
+    .slice(0, maxRadarCandidatesForModel);
 
-  const articles = deduped
-    .map((article) => ({ ...article, relevance: scoreCandidate(article) }))
-    .filter((article) => article.relevance > 0)
-    .sort((left, right) => right.relevance - left.relevance || Date.parse(right.publishedAt) - Date.parse(left.publishedAt));
+  if (radarCandidates.length < 5) {
+    throw new Error("RSS에서 RADAR 후보를 충분히 찾지 못했습니다.");
+  }
 
-  if (!articles.length) throw new Error("RSS에서 금융시장 관련 기사 후보를 찾지 못했습니다.");
-  return { rawCount: raw.length, radar, articles };
+  return { rawCount: raw.length, dedupedCount: deduped.length, radarCandidates };
+}
+
+function radarSchema() {
+  return {
+    type: "object",
+    additionalProperties: false,
+    required: ["items"],
+    properties: {
+      items: {
+        type: "array",
+        minItems: 10,
+        maxItems: maxRadarItems,
+        items: {
+          type: "object",
+          additionalProperties: false,
+          required: ["id", "keywords", "summary"],
+          properties: {
+            id: { type: "string" },
+            keywords: {
+              type: "array",
+              minItems: 2,
+              maxItems: 3,
+              items: { type: "string" }
+            },
+            summary: { type: "string" }
+          }
+        }
+      }
+    }
+  };
+}
+
+function buildRadarPrompt(date, candidates) {
+  const compactCandidates = candidates.map((article, index) => ({
+    id: `R${String(index + 1).padStart(3, "0")}`,
+    source: article.source,
+    section: article.section,
+    title: article.title,
+    publishedAt: article.publishedAt,
+    rssSummary: truncate(article.summary, 350)
+  }));
+
+  return `오늘은 ${date}입니다.
+
+아래는 매일경제·한국경제의 경제/증권/국제 RSS에서 느슨하게 모은 후보입니다.
+금융권 취업 준비자가 아침에 넓게 훑을 가치가 있는 기사만 RADAR로 남기세요.
+
+RADAR의 목적:
+- CORE처럼 5개로 좁히는 것이 아니라 오늘 경제·금융 뉴스의 지형을 넓게 보는 것입니다.
+- 다만 뉴스 가치가 거의 없는 잡음은 제거합니다.
+
+포함할 만한 기사:
+- 거시경제, 물가·고용·경기·소비·무역·재정·통화정책
+- 금리·채권·환율·주식·ETF·파생·신용·유동성 등 금융시장
+- 은행·증권·운용·보험·금융규제·시장구조
+- 기업 실적, 투자, M&A, 자금조달, 산업 변화 중 시장·경제 흐름을 이해하는 데 의미 있는 내용
+- 반도체·AI·에너지·부동산·글로벌 이슈 중 경제·시장 연결고리가 있는 내용
+
+제외할 기사:
+- 기부·CSR·캠페인·봉사·직원 복지·수상·행사 참석 같은 미담/홍보성 기사
+- 단순 인사, 연예·생활·쇼핑성 기사
+- 시장·경제 흐름과 연결이 거의 없는 작은 기업 단신
+- 사실상 같은 사건을 반복한 중복 기사
+
+선별 강도:
+- 직접적인 금융시장 기사만 남기지 말고 경제·산업 흐름을 볼 수 있는 기사도 폭넓게 남기세요.
+- 보통 15~25개가 적당하지만 숫자를 채우기 위해 쓸데없는 기사를 넣지 마세요.
+
+각 기사 작성:
+- id: 후보의 id를 정확히 사용
+- keywords: 핵심 주제 2~3개. '경제', '금융', '증권' 같은 지나치게 일반적인 단어는 가급적 피하세요.
+- summary: 한국어 한 문장, 짧고 구체적으로. 제목과 rssSummary에서 확인되는 사실만 사용하세요.
+- rssSummary가 비어 있으면 제목에 있는 사실만 보수적으로 풀어 쓰고 새로운 사실을 추측하지 마세요.
+
+후보:
+${JSON.stringify(compactCandidates, null, 2)}`;
 }
 
 function readListSchema() {
@@ -287,18 +331,30 @@ function readListSchema() {
   };
 }
 
-function buildPrompt(date, candidates) {
+function buildCorePrompt(date, candidates) {
+  const compactCandidates = candidates.map((article) => ({
+    source: article.source,
+    section: article.section,
+    title: article.title,
+    url: article.url,
+    publishedAt: article.publishedAt,
+    rssSummary: truncate(article.summary, 500),
+    radarKeywords: article.radarKeywords,
+    radarSummary: article.radarSummary
+  }));
+
   return `오늘은 ${date}입니다.
 
-아래 RSS 후보에서 금융권 취업 준비자가 오늘 직접 읽을 가치가 가장 높은 금융시장 이슈 5개를 고르세요.
+아래 후보는 GPT-5.6 Luna가 경제·금융 RADAR로 먼저 선별한 기사들입니다.
+이 후보 전체를 비교해서 금융권 취업 준비자가 오늘 직접 읽을 가치가 가장 높은 금융시장 이슈 5개를 고르세요.
 
 선정 기준:
 - 금리·채권, 환율, 주식 수급·변동성, 파생상품·ETF, 신용·유동성, 금융규제·시장구조, 주요 거시경제를 우선합니다.
-- 금융시장 영향이 약한 일반 정치·사회·생활 뉴스는 제외합니다.
+- 기업·산업 뉴스는 시장 가격, 자금조달, 실적, 투자 사이클이나 거시 흐름과 연결될 때 우선합니다.
 - 후보 전체를 비교해 상대적으로 중요한 5개만 선택합니다.
 - 한 항목은 반드시 하나의 이슈만 다룹니다.
 - 같은 사건의 기사만 대표기사 + 관련기사로 묶고, 서로 다른 사건은 합치지 않습니다.
-- 모든 내용은 선택한 mainArticle과 relatedArticles의 title·summary에서 확인되는 정보만 사용합니다.
+- 사실·숫자는 title과 rssSummary에서 확인되는 정보만 사용합니다. radarSummary는 방향을 잡는 보조 정보일 뿐 새 사실의 근거로 쓰지 마세요.
 
 작성:
 - summary: 무슨 기사인지 1~2문장
@@ -311,11 +367,11 @@ function buildPrompt(date, candidates) {
 
 중요: 5개를 채우기 위해 서로 다른 이슈를 한 항목에 합치지 마세요.
 
-RSS 후보:
-${JSON.stringify(candidates, null, 2)}`;
+RADAR 후보:
+${JSON.stringify(compactCandidates, null, 2)}`;
 }
 
-async function selectWithOpenAI(date, candidates) {
+async function callOpenAI({ model, reasoningEffort, schemaName, schema, system, user }) {
   const apiKey = process.env.OPENAI_API_KEY;
   if (!apiKey) throw new Error("OPENAI_API_KEY 환경변수가 없습니다. 프로젝트 루트에 .env 파일을 만들고 키를 설정하세요.");
 
@@ -327,47 +383,126 @@ async function selectWithOpenAI(date, candidates) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model: process.env.OPENAI_MODEL || defaultModel,
-      temperature: 0.2,
+      model,
+      reasoning_effort: reasoningEffort,
       response_format: {
         type: "json_schema",
         json_schema: {
-          name: "financial_os_read_list",
+          name: schemaName,
           strict: true,
-          schema: readListSchema()
+          schema
         }
       },
       messages: [
-        {
-          role: "system",
-          content: "You are a cautious Korean financial-market editor. Rank stories by their relative importance to today's financial markets, not by general newsworthiness. Use only verified RSS candidate metadata and return valid JSON matching the provided schema."
-        },
-        { role: "user", content: buildPrompt(date, candidates) }
+        { role: "system", content: system },
+        { role: "user", content: user }
       ]
     })
   });
 
   if (!response.ok) {
     const details = await response.text();
-    throw new Error(`OpenAI API 호출 실패: ${response.status} ${details}`);
+    throw new Error(`${model} API 호출 실패: ${response.status} ${details}`);
   }
 
   const payload = await response.json();
   const content = payload?.choices?.[0]?.message?.content;
-  if (typeof content !== "string") throw new Error("OpenAI API 응답에서 JSON 콘텐츠를 찾지 못했습니다.");
+  if (typeof content !== "string") throw new Error(`${model} API 응답에서 JSON 콘텐츠를 찾지 못했습니다.`);
   return JSON.parse(content);
+}
+
+async function selectRadarWithOpenAI(date, candidates) {
+  const model = process.env.OPENAI_RADAR_MODEL || defaultRadarModel;
+  const selection = await callOpenAI({
+    model,
+    reasoningEffort: "low",
+    schemaName: "financial_os_radar",
+    schema: radarSchema(),
+    system: "You are a careful Korean economics and financial-news editor. Preserve breadth, remove low-value noise, never invent facts, and return valid JSON matching the provided schema.",
+    user: buildRadarPrompt(date, candidates)
+  });
+  return { model, selection };
+}
+
+async function selectCoreWithOpenAI(date, candidates) {
+  const model = process.env.OPENAI_CORE_MODEL || defaultCoreModel;
+  const selection = await callOpenAI({
+    model,
+    reasoningEffort: "medium",
+    schemaName: "financial_os_core",
+    schema: readListSchema(),
+    system: "You are a cautious Korean financial-market editor. Rank stories by relative importance to today's financial markets, not by general newsworthiness. Use only verified candidate metadata and return valid JSON matching the provided schema.",
+    user: buildCorePrompt(date, candidates)
+  });
+  return { model, selection };
+}
+
+function validateAndBuildRadar(selection, candidates) {
+  if (!Array.isArray(selection?.items) || selection.items.length < 5 || selection.items.length > maxRadarItems) {
+    throw new Error("RADAR AI 결과의 항목 수가 올바르지 않습니다. 기존 read-list.json은 변경하지 않았습니다.");
+  }
+
+  const candidateById = new Map(
+    candidates.map((article, index) => [`R${String(index + 1).padStart(3, "0")}`, article])
+  );
+  const usedUrls = new Set();
+
+  const radar = selection.items.map((item) => {
+    const article = candidateById.get(item.id);
+    if (!article) throw new Error(`RADAR 후보에 없는 id가 반환되었습니다: ${item.id}`);
+    if (usedUrls.has(article.url)) throw new Error(`RADAR 기사 URL이 중복되었습니다: ${article.url}`);
+    usedUrls.add(article.url);
+
+    const keywords = toArray(item.keywords)
+      .map((keyword) => String(keyword).trim().replace(/^#/, ""))
+      .filter(Boolean)
+      .filter((keyword, index, list) => list.indexOf(keyword) === index)
+      .slice(0, 3);
+
+    if (keywords.length < 2) {
+      throw new Error(`RADAR ${item.id}의 키워드가 2개 미만입니다.`);
+    }
+
+    const summary = String(item.summary ?? "").replace(/\s+/g, " ").trim();
+    if (!summary) throw new Error(`RADAR ${item.id}의 AI 요약이 비어 있습니다.`);
+
+    return {
+      source: article.source,
+      section: article.section,
+      title: article.title,
+      url: article.url,
+      publishedAt: article.publishedAt,
+      keywords,
+      summary: truncate(summary, 180)
+    };
+  });
+
+  return radar.sort((left, right) => Date.parse(right.publishedAt) - Date.parse(left.publishedAt));
+}
+
+function buildCoreCandidates(radar, radarCandidates) {
+  const candidateByUrl = new Map(radarCandidates.map((article) => [article.url, article]));
+  return radar.map((radarItem) => {
+    const original = candidateByUrl.get(radarItem.url);
+    if (!original) throw new Error(`RADAR 원본 후보를 찾지 못했습니다: ${radarItem.url}`);
+    return {
+      ...original,
+      radarKeywords: radarItem.keywords,
+      radarSummary: radarItem.summary
+    };
+  });
 }
 
 function validateAndBuildReadList(date, radar, selection, candidates) {
   if (!Array.isArray(selection?.items) || selection.items.length !== 5) {
-    throw new Error("OpenAI 결과에 정확히 5개 항목이 없습니다. 기존 read-list.json은 변경하지 않았습니다.");
+    throw new Error("CORE AI 결과에 정확히 5개 항목이 없습니다. 기존 read-list.json은 변경하지 않았습니다.");
   }
 
   const candidateByUrl = new Map(candidates.map((article) => [article.url, article]));
   const mainUrls = new Set();
   const items = selection.items.map((item, index) => {
     const main = candidateByUrl.get(canonicalUrl(item.mainArticle?.url ?? ""));
-    if (!main) throw new Error(`후보 RSS에 없는 대표기사 URL이 반환되었습니다: ${item.mainArticle?.url ?? "없음"}`);
+    if (!main) throw new Error(`RADAR 후보에 없는 대표기사 URL이 반환되었습니다: ${item.mainArticle?.url ?? "없음"}`);
     if (mainUrls.has(main.url)) throw new Error("대표기사 URL이 중복되었습니다. 기존 read-list.json은 변경하지 않았습니다.");
     mainUrls.add(main.url);
 
@@ -412,18 +547,24 @@ async function main() {
     throw new Error("RSS 소스 설정 파일에 feeds가 없습니다.");
   }
 
-  const { rawCount, radar, articles } = await collectArticles(sourceConfig.feeds);
-  const candidates = articles.slice(0, maxCandidatesForModel).map(({ relevance, ...article }) => article);
-  console.log(`RSS 수집 완료: 원본 ${rawCount}건 → RADAR ${radar.length}건 → 금융시장 관련성 필터 ${articles.length}건 → AI 후보 ${candidates.length}건`);
+  const { rawCount, dedupedCount, radarCandidates } = await collectArticles(sourceConfig.feeds);
+  console.log(`RSS 수집 완료: 원본 ${rawCount}건 → URL 중복 제거 ${dedupedCount}건 → RADAR AI 후보 ${radarCandidates.length}건`);
 
   if (isCollectOnly) {
-    console.log(JSON.stringify({ radar, coreCandidates: candidates.slice(0, 10) }, null, 2));
+    console.log(JSON.stringify({ radarCandidates: radarCandidates.slice(0, 30) }, null, 2));
     return;
   }
 
   const date = formatKoreaDate();
-  const selection = await selectWithOpenAI(date, candidates);
-  const readList = validateAndBuildReadList(date, radar, selection, candidates);
+
+  const { model: radarModel, selection: radarSelection } = await selectRadarWithOpenAI(date, radarCandidates);
+  const radar = validateAndBuildRadar(radarSelection, radarCandidates);
+  console.log(`RADAR 완료: ${radarModel} → ${radar.length}건 선별·키워드·AI 한 줄 요약`);
+
+  const coreCandidates = buildCoreCandidates(radar, radarCandidates);
+  const { model: coreModel, selection: coreSelection } = await selectCoreWithOpenAI(date, coreCandidates);
+  const readList = validateAndBuildReadList(date, radar, coreSelection, coreCandidates);
+  console.log(`CORE 완료: ${coreModel} → 5개 핵심 이슈 선별`);
 
   if (isDryRun) {
     console.log(JSON.stringify(readList, null, 2));

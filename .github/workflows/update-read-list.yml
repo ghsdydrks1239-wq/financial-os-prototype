@@ -3,10 +3,11 @@ name: Update READ LIST
 on:
   workflow_dispatch:
   schedule:
-    # 07:30 / 07:45 / 08:00 KST = 22:30 / 22:45 / 23:00 UTC (previous UTC day)
+    # 07:30 / 07:45 / 08:00 / 08:35 KST = 22:30 / 22:45 / 23:00 / 23:35 UTC (previous UTC day)
     - cron: '30 22 * * *'
     - cron: '45 22 * * *'
     - cron: '0 23 * * *'
+    - cron: '35 23 * * *'
 
 permissions:
   contents: write

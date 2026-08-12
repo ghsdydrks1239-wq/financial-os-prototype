@@ -2,179 +2,266 @@
   "date": "2026-08-12",
   "radar": [
     {
+      "source": "매일경제",
+      "section": "증권",
+      "title": "“이 정도면 주도주 교체?”…K화장품, 수출 대박 힘입어 신고가 행진",
+      "url": "https://www.mk.co.kr/news/stock/12125739",
+      "publishedAt": "Wed, 12 Aug 2026 20:23:03 +09:00",
+      "keywords": [
+        "수출",
+        "실적"
+      ],
+      "summary": "한국콜마, 2분기 최대 실적 이달들어 주가 39% 치솟아 K뷰티 유통채널에도 온기 실리콘투, 영업익 59% 껑충K뷰티에 대한 전 세계적인 인기가 괄목할 만한 실적으로 증명되고 있다.."
+    },
+    {
+      "source": "한국경제",
+      "section": "증권",
+      "title": "곧 사라진다더니 주류로…커지는 '인덱스펀드'의 힘",
+      "url": "https://www.hankyung.com/article/2026081274221",
+      "publishedAt": "Wed, 12 Aug 2026 20:00:01 +0900",
+      "keywords": [],
+      "summary": ""
+    },
+    {
+      "source": "한국경제",
+      "section": "경제",
+      "title": "폭스콘, AI 하드웨어 수요로 2분기 이익 예상넘는 35% 급증",
+      "url": "https://www.hankyung.com/article/202608127734i",
+      "publishedAt": "Wed, 12 Aug 2026 19:52:42 +0900",
+      "keywords": [
+        "AI"
+      ],
+      "summary": ""
+    },
+    {
       "source": "한국경제",
       "section": "경제",
       "title": "'명품 없이' 연매출 8000억…쇼핑몰 사로잡은 '덕후' 지갑 [덕질경제학]",
       "url": "https://www.hankyung.com/article/202608126782H",
-      "publishedAt": "Wed, 12 Aug 2026 19:31:01 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 19:31:01 +0900",
+      "keywords": [],
+      "summary": ""
     },
     {
       "source": "한국경제",
       "section": "경제",
       "title": "세계최대국부펀드, 2분기에 261조원 대박…\"아시아기술주 덕\"",
       "url": "https://www.hankyung.com/article/202608127715i",
-      "publishedAt": "Wed, 12 Aug 2026 19:20:09 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 19:20:09 +0900",
+      "keywords": [],
+      "summary": ""
     },
     {
       "source": "매일경제",
       "section": "경제",
       "title": "“한 건인 줄 알았는데 또 터졌다”…은행권 대출사기 속출, 490억 달해",
       "url": "https://www.mk.co.kr/news/economy/12125653",
-      "publishedAt": "Wed, 12 Aug 2026 19:00:28 +09:00"
+      "publishedAt": "Wed, 12 Aug 2026 19:00:28 +09:00",
+      "keywords": [
+        "대출",
+        "은행",
+        "금융"
+      ],
+      "summary": "KB국민·신한·우리·IBK기업은행서 총 490억 금융사고주요 시중은행들이 수백억원대 금융사고에 휘말렸다. 대출 심사 과정에서 허위 서류나 거래를 걸러내지 못했다는 점에서 은행의 내.."
     },
     {
       "source": "한국경제",
       "section": "경제",
       "title": "김승연 회장, 사재 들여 全직원에 보양식",
       "url": "https://www.hankyung.com/article/2026081274561",
-      "publishedAt": "Wed, 12 Aug 2026 18:34:35 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 18:34:35 +0900",
+      "keywords": [],
+      "summary": ""
     },
     {
       "source": "한국경제",
       "section": "경제",
       "title": "정진완 우리은행장, 포용금융 캠페인 동참",
       "url": "https://www.hankyung.com/article/2026081274601",
-      "publishedAt": "Wed, 12 Aug 2026 18:34:10 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 18:34:10 +0900",
+      "keywords": [
+        "은행",
+        "금융"
+      ],
+      "summary": ""
     },
     {
       "source": "한국경제",
       "section": "경제",
       "title": "두나무, 부채·고립 청년 4122명 지원",
       "url": "https://www.hankyung.com/article/2026081274541",
-      "publishedAt": "Wed, 12 Aug 2026 18:33:19 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 18:33:19 +0900",
+      "keywords": [],
+      "summary": ""
     },
     {
       "source": "매일경제",
       "section": "경제",
       "title": "미국·일본 통화공조 시대…뜨는 투자처 있다는데 [지정학에서 찾는 투자기회]",
       "url": "https://www.mk.co.kr/news/economy/12125646",
-      "publishedAt": "Wed, 12 Aug 2026 18:31:33 +09:00"
+      "publishedAt": "Wed, 12 Aug 2026 18:31:33 +09:00",
+      "keywords": [
+        "환율",
+        "달러"
+      ],
+      "summary": "미·일 통화 공조로 뜨는 투자 아이디어지난달 말 엔·달러 환율이 달러당 164엔에 육박하며 1986년 이후 약 40년 만의 최저 수준까지 떨어졌다. 이에 대응해 일본 재무성과 일본.."
     },
     {
       "source": "매일경제",
       "section": "증권",
       "title": "한토신 종로보령빌딩 매각 주관사에 젠스타·대신증권",
       "url": "https://www.mk.co.kr/news/stock/12125638",
-      "publishedAt": "Wed, 12 Aug 2026 18:08:41 +09:00"
+      "publishedAt": "Wed, 12 Aug 2026 18:08:41 +09:00",
+      "keywords": [
+        "증권"
+      ],
+      "summary": "10월 경쟁입찰 실시 예정 보령홀딩스·교공 임차 중[본 기사는 08월 12일(18:05) 매일경제 자본시장 전문 유료매체인 ‘레이더M’에 보도 된 기사입니다] 한국토지신탁 ‘케이원.."
     },
     {
       "source": "한국경제",
       "section": "경제",
       "title": "'메이드 인 EU' 노린 中, 유럽 車부품사 쓸어담는다",
       "url": "https://www.hankyung.com/article/2026081275751",
-      "publishedAt": "Wed, 12 Aug 2026 18:08:37 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 18:08:37 +0900",
+      "keywords": [],
+      "summary": ""
     },
     {
       "source": "한국경제",
       "section": "국제",
       "title": "배송기사 직고용 놓고, 맘다니-아마존 충돌",
       "url": "https://www.hankyung.com/article/2026081275761",
-      "publishedAt": "Wed, 12 Aug 2026 18:06:38 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 18:06:38 +0900",
+      "keywords": [
+        "고용"
+      ],
+      "summary": ""
     },
     {
       "source": "한국경제",
       "section": "경제",
       "title": "\"AI 열풍에 증설 필요\"…TSMC, 첨단공정 294억弗 또 투자",
       "url": "https://www.hankyung.com/article/2026081275721",
-      "publishedAt": "Wed, 12 Aug 2026 18:06:18 +0900"
-    },
-    {
-      "source": "매일경제",
-      "section": "증권",
-      "title": "대동금속, 90억원 규모 유상증자 실시",
-      "url": "https://www.mk.co.kr/news/stock/12125633",
-      "publishedAt": "Wed, 12 Aug 2026 18:04:12 +09:00"
+      "publishedAt": "Wed, 12 Aug 2026 18:06:18 +0900",
+      "keywords": [
+        "AI"
+      ],
+      "summary": ""
     },
     {
       "source": "매일경제",
       "section": "증권",
       "title": "덴티스, 80억 원 규모 전환사채 발행",
       "url": "https://www.mk.co.kr/news/stock/12125634",
-      "publishedAt": "Wed, 12 Aug 2026 18:04:12 +09:00"
+      "publishedAt": "Wed, 12 Aug 2026 18:04:12 +09:00",
+      "keywords": [
+        "코스닥"
+      ],
+      "summary": "코스닥 상장사 덴티스가 제4회 80억 원 규모의 전환사채를 발행한다고 2026년 8월 12일 공시했다. 전환가액은 3102원이며, 전환 청구 기간은 2027년 8월 20일부터 20.."
+    },
+    {
+      "source": "매일경제",
+      "section": "증권",
+      "title": "대동금속, 90억원 규모 유상증자 실시",
+      "url": "https://www.mk.co.kr/news/stock/12125633",
+      "publishedAt": "Wed, 12 Aug 2026 18:04:12 +09:00",
+      "keywords": [
+        "코스닥",
+        "주식"
+      ],
+      "summary": "코스닥 상장사 대동금속이 89억 9700만원 규모의 제3자배정증자를 실시한다고 2026년 8월 12일 공시했다. 이번 유상증자에서 신주 발행 주식 수는 보통주 300만 주, 증자 .."
     },
     {
       "source": "한국경제",
       "section": "경제",
       "title": "美·日 개입에도 다시 엔저…동조 옅어진 원화는 강세",
       "url": "https://www.hankyung.com/article/2026081274931",
-      "publishedAt": "Wed, 12 Aug 2026 18:01:00 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 18:01:00 +0900",
+      "keywords": [
+        "원화"
+      ],
+      "summary": ""
     },
     {
       "source": "매일경제",
       "section": "증권",
       "title": "중동戰 장기화 여파에 한전 영업이익 17% '뚝'",
       "url": "https://www.mk.co.kr/news/stock/12125592",
-      "publishedAt": "Wed, 12 Aug 2026 18:00:00 +09:00"
+      "publishedAt": "Wed, 12 Aug 2026 18:00:00 +09:00",
+      "keywords": [],
+      "summary": "중동 전쟁 장기화로 유연탄 가격이 오르면서 한국전력공사의 올해 상반기 영업이익이 전년 동기 대비 16.6% 감소했다. 액화천연가스(LNG) 가격 상승세가 아직 충분히 반영되지 않아.."
     },
     {
       "source": "한국경제",
       "section": "경제",
       "title": "영덕 들어설 신규원전, 첫 기후평가",
       "url": "https://www.hankyung.com/article/2026081274911",
-      "publishedAt": "Wed, 12 Aug 2026 17:59:47 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 17:59:47 +0900",
+      "keywords": [],
+      "summary": ""
     },
     {
       "source": "한국경제",
       "section": "증권",
       "title": "스페이스X가 테슬라 인수하면 머스크 '1조달러 잭팟' 터질까",
       "url": "https://www.hankyung.com/article/2026081274211",
-      "publishedAt": "Wed, 12 Aug 2026 17:59:46 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 17:59:46 +0900",
+      "keywords": [
+        "달러"
+      ],
+      "summary": ""
     },
     {
       "source": "한국경제",
       "section": "증권",
       "title": "AI 날개 단 GS…\"만년 저평가 해소 기대\"",
       "url": "https://www.hankyung.com/article/2026081275771",
-      "publishedAt": "Wed, 12 Aug 2026 17:58:29 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 17:58:29 +0900",
+      "keywords": [
+        "AI"
+      ],
+      "summary": ""
     },
     {
       "source": "한국경제",
       "section": "경제",
       "title": "與도 비판 쏟아내는 '부동산稅 개편' [퇴근길 30초 경제]",
       "url": "https://www.hankyung.com/article/202608127622H",
-      "publishedAt": "Wed, 12 Aug 2026 17:58:08 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 17:58:08 +0900",
+      "keywords": [],
+      "summary": ""
     },
     {
       "source": "한국경제",
       "section": "증권",
       "title": "英 하이닉스 3배 ETP 두달새 98% '뚝'",
       "url": "https://www.hankyung.com/article/2026081275801",
-      "publishedAt": "Wed, 12 Aug 2026 17:57:03 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 17:57:03 +0900",
+      "keywords": [],
+      "summary": ""
     },
     {
       "source": "한국경제",
       "section": "증권",
       "title": "월가 \"AI 투자 안꺾일 것\"…코스피 '매수 사이드카'",
       "url": "https://www.hankyung.com/article/2026081275831",
-      "publishedAt": "Wed, 12 Aug 2026 17:56:14 +0900"
+      "publishedAt": "Wed, 12 Aug 2026 17:56:14 +0900",
+      "keywords": [
+        "코스피",
+        "AI"
+      ],
+      "summary": ""
     },
     {
       "source": "매일경제",
       "section": "경제",
       "title": "1.6조 들인 공공AI데이터… 중복 판치고 오류도 방치",
       "url": "https://www.mk.co.kr/news/economy/12125623",
-      "publishedAt": "Wed, 12 Aug 2026 17:53:46 +09:00"
-    },
-    {
-      "source": "한국경제",
-      "section": "경제",
-      "title": "계속 사라지는 청년 일자리…금융위기 이후 최악 고용한파",
-      "url": "https://www.hankyung.com/article/2026081275861",
-      "publishedAt": "Wed, 12 Aug 2026 17:53:44 +0900"
-    },
-    {
-      "source": "한국경제",
-      "section": "경제",
-      "title": "'37만8000명' 한국의 충격 통계…쳥년들 눈물 쏟아진다",
-      "url": "https://www.hankyung.com/article/2026081275551",
-      "publishedAt": "Wed, 12 Aug 2026 17:53:23 +0900"
-    },
-    {
-      "source": "매일경제",
-      "section": "국제",
-      "title": "금융자산 된 엔비디아칩 석유처럼 선물 거래한다",
-      "url": "https://www.mk.co.kr/news/world/12125615",
-      "publishedAt": "Wed, 12 Aug 2026 17:51:28 +09:00"
+      "publishedAt": "Wed, 12 Aug 2026 17:53:46 +09:00",
+      "keywords": [
+        "AI"
+      ],
+      "summary": "정부가 1조6000억원 이상을 투입한 공공 인공지능(AI) 학습용 데이터 구축 사업에서 중복 구축과 부실 검증, 오류 방치 등 총체적 난맥상이 적발됐다. 감사원은 12일 '인공지능.."
     }
   ],
   "items": [
@@ -182,9 +269,9 @@
       "id": "article-01",
       "priority": "매우 높음",
       "lens": "금리·채권",
-      "issue": "엔비디아의 AI 생태계 파이낸싱과 채권시장 신용위험 변화",
-      "summary": "엔비디아가 월스트리트와 협력해 5000억 달러 규모 AI 생태계 파이낸싱 계획을 발표하며 채권시장에서 신용위험 경계감이 커졌다. 젠슨 황 CEO가 직접 이를 설득했다.",
-      "reason": "AI 산업에 대한 대규모 자금 조달이 채권시장 신용위험과 투자 심리에 직접적인 영향을 미치고 있어 금융시장 변동성에 중요한 변수다.",
+      "issue": "엔비디아와 월스트리트 금융기관의 5000억 달러 AI 생태계 파이낸싱 계획과 채권시장 신용위험 경계감",
+      "summary": "엔비디아가 월스트리트 금융기관들과 5000억 달러 규모 AI 생태계 파이낸싱을 발표하자 채권시장에서 신용위험 우려가 커졌다. 젠슨 황 CEO가 이를 직접 진화하고 있다.",
+      "reason": "대규모 AI 관련 자금 조성은 채권시장 신용위험과 투자 심리에 직접적인 영향을 미치며, AI 산업과 금융시장 간 연결고리를 강화한다.",
       "mainArticle": {
         "source": "매일경제",
         "title": "젠슨 황에 채권시장도 설득당했다 … 코어위브의 깜짝 실적, AI 생태계 여파는",
@@ -198,17 +285,17 @@
         }
       ],
       "questions": [
-        "엔비디아의 AI 생태계 파이낸싱이 채권시장 신용위험에 어떤 영향을 미쳤나?",
-        "이러한 대규모 투자 계획이 다른 금융자산과 시장 변동성에 미치는 영향은 무엇인가?"
+        "AI 생태계 파이낸싱 계획이 채권시장 신용위험에 어떤 영향을 미쳤나?",
+        "이 자금 조성이 다른 금융자산과 시장 변동성에 미칠 파급효과는 무엇인가?"
       ]
     },
     {
       "id": "article-02",
       "priority": "매우 높음",
       "lens": "환율",
-      "issue": "원달러 환율 하락과 달러 약세 지속",
-      "summary": "원달러 환율이 1410원대까지 하락하며 지난해 10월 이후 최저 수준을 기록했고, SK하이닉스 ADR 매도 영향과 법인세 납부가 원화 강세 압력으로 작용하고 있다.",
-      "reason": "환율 변동은 수출입 기업 실적과 외국인 투자자 수급에 직접적인 영향을 미치며, 금융시장 전반의 변동성을 좌우한다.",
+      "issue": "SK하이닉스 ADR 영향으로 원화 강세와 달러 약세 지속",
+      "summary": "SK하이닉스 ADR 호조와 법인세 납부 영향으로 원달러 환율이 1410원대까지 하락하며 원화 강세가 이어지고 있다.",
+      "reason": "환율 변동은 수출입 기업과 금융시장 전반에 영향을 주며, 원화 강세는 국내 증시와 외국인 투자자 수급에도 중요한 변수다.",
       "mainArticle": {
         "source": "매일경제",
         "title": "SK하이닉스 ADR이 불붙인 달러 매도…달러 약세 어디까지",
@@ -216,17 +303,17 @@
       },
       "relatedArticles": [],
       "questions": [
-        "SK하이닉스 ADR 매도가 원달러 환율에 미친 영향은 무엇인가?",
-        "원화 강세가 국내 수출기업과 금융시장에 미치는 파급 효과는 무엇인가?"
+        "SK하이닉스 ADR 호조가 원화 강세에 미친 구체적 영향은 무엇인가?",
+        "달러 약세가 국내 주식시장과 채권시장에 미치는 파급효과는?"
       ]
     },
     {
       "id": "article-03",
       "priority": "매우 높음",
       "lens": "주식 수급·변동성",
-      "issue": "코스피 급등과 외국인·기관 순매수에 따른 시장 반등 및 매수 사이드카 발동",
-      "summary": "코스피가 대형 반도체주 강세와 외국인·기관 동반 순매수에 힘입어 3.6% 반등하며 6500선을 회복했고, 급등에 따른 매수 사이드카가 발동됐다.",
-      "reason": "주식시장 변동성 확대와 외국인 수급 변화는 투자심리와 단기 시장 방향성에 큰 영향을 미친다.",
+      "issue": "코스피 3.6% 급등과 외국인·기관 동반 순매수, 매수 사이드카 발동",
+      "summary": "12일 코스피가 대형 반도체주 강세와 외국인·기관의 대규모 순매수에 힘입어 3.6% 반등하며 6500선을 회복했고, 급등에 따른 매수 사이드카가 발동됐다.",
+      "reason": "주식시장 변동성과 수급 동향은 금융시장 전반에 영향을 미치며, 매수 사이드카 발동은 시장 과열과 투자자 심리를 반영한다.",
       "mainArticle": {
         "source": "매일경제",
         "title": "[속보] 코스피, 외인 3조 순매수와 반도체주 강세에 3.6% 반등…코스닥 0.12%↑",
@@ -242,20 +329,25 @@
           "source": "한국경제",
           "title": "[속보] 코스피 급등에 매수 사이드카 발동",
           "url": "https://www.hankyung.com/article/2026081265657"
+        },
+        {
+          "source": "한국경제",
+          "title": "코스피 5% 급등에 매수 사이드카 발동…삼전닉스 7%대 강세",
+          "url": "https://www.hankyung.com/article/2026081265956"
         }
       ],
       "questions": [
-        "외국인과 기관의 순매수가 코스피 급등에 어떤 역할을 했나?",
-        "매수 사이드카 발동이 단기 시장 변동성에 미치는 영향은 무엇인가?"
+        "외국인과 기관의 대규모 순매수가 코스피 급등에 어떻게 기여했나?",
+        "매수 사이드카 발동이 시장 변동성과 투자 심리에 미치는 영향은?"
       ]
     },
     {
       "id": "article-04",
       "priority": "높음",
       "lens": "파생상품·ETF",
-      "issue": "엔비디아 GPU 기반 선물 계약 출시 예정",
-      "summary": "오는 10월 엔비디아 GPU를 기초자산으로 하는 선물 계약 2종이 출시되어 AI 컴퓨팅 파워가 새로운 금융자산으로 거래될 예정이다.",
-      "reason": "새로운 파생상품 출시는 시장 유동성과 투자자들의 자산배분 전략에 변화를 가져올 수 있다.",
+      "issue": "엔비디아 GPU 기반 선물 계약 10월 출시 예정",
+      "summary": "오는 10월 엔비디아 GPU를 기초자산으로 하는 선물 계약 2종이 출시되어 AI 컴퓨팅 파워가 새로운 금융자산으로 자리잡는다.",
+      "reason": "신규 파생상품 출시는 시장 유동성과 투자 기회를 확대하며, AI 관련 자산의 금융시장 내 역할을 강화한다.",
       "mainArticle": {
         "source": "매일경제",
         "title": "금융자산 된 엔비디아칩 석유처럼 선물 거래한다",
@@ -263,32 +355,26 @@
       },
       "relatedArticles": [],
       "questions": [
-        "엔비디아 GPU 선물 계약 출시에 따른 시장 유동성 변화는?",
-        "이 신상품이 기존 파생상품 시장과 투자자 포트폴리오에 미치는 영향은?"
+        "엔비디아 GPU 선물 계약 출시는 시장에 어떤 유동성 변화를 가져올까?",
+        "이 선물 계약이 기존 원유, 전력 등 금융자산과 어떤 차별점과 연계성을 갖나?"
       ]
     },
     {
       "id": "article-05",
       "priority": "높음",
-      "lens": "금융규제·시장구조",
-      "issue": "단일종목 레버리지 상품 괴리율 관리 강화 및 모의거래 의무화",
-      "summary": "금융위가 단일종목 레버리지 상품의 괴리율 기준을 강화하고 신규 투자자에 대해 모의거래 이수를 의무화하는 규정을 오는 19일부터 시행한다.",
-      "reason": "레버리지 상품 규제 강화는 투자자 보호와 시장 안정성에 직접적인 영향을 미치며 파생상품 시장 구조 변화의 신호다.",
+      "lens": "신용·유동성",
+      "issue": "은행권 대출사기 490억 원 규모 발생, 금융사 내부통제 문제 부각",
+      "summary": "KB국민, 신한, 우리, IBK기업은행 등 주요 시중은행에서 총 490억 원 규모의 대출사기가 발생해 은행의 대출 심사 및 내부통제 문제점이 드러났다.",
+      "reason": "대출사기 증가는 금융권 신용위험과 유동성 관리에 부정적 영향을 미치며, 금융시장 안정성에 중요한 시사점을 제공한다.",
       "mainArticle": {
         "source": "매일경제",
-        "title": "단일종목 레버리지 괴리율 관리 19일부터 강화…모의거래도 의무화",
-        "url": "https://www.mk.co.kr/news/stock/12125430"
+        "title": "“한 건인 줄 알았는데 또 터졌다”…은행권 대출사기 속출, 490억 달해",
+        "url": "https://www.mk.co.kr/news/economy/12125653"
       },
-      "relatedArticles": [
-        {
-          "source": "한국경제",
-          "title": "오는 19일부터 단일레버리지 상품 모의거래 의무화",
-          "url": "https://www.hankyung.com/article/202608127524i"
-        }
-      ],
+      "relatedArticles": [],
       "questions": [
-        "괴리율 관리 강화가 레버리지 상품 시장에 미치는 영향은?",
-        "모의거래 의무화가 신규 투자자 행동과 시장 안정성에 미치는 효과는?"
+        "대출사기 발생 원인과 은행 내부통제의 어떤 취약점이 노출되었나?",
+        "이 사건이 금융권 신용위험과 대출 유동성에 미칠 잠재적 영향은 무엇인가?"
       ]
     }
   ]

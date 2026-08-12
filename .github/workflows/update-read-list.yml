@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - scripts/update-read-list.mjs
+      - .github/run-news-now
   schedule:
     - cron: '30 7 * * *'
       timezone: 'Asia/Seoul'

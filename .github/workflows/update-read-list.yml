@@ -2,6 +2,11 @@ name: Update READ LIST
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - scripts/update-read-list.mjs
   schedule:
     - cron: '30 7 * * *'
       timezone: 'Asia/Seoul'

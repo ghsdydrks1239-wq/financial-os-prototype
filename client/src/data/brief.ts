@@ -19,6 +19,8 @@ export type RadarItem = {
   title: string;
   url: string;
   publishedAt: string;
+  keywords?: string[];
+  summary?: string;
 };
 
 export type ReadItem = {

@@ -63,34 +63,54 @@ function RadarView() {
         <div className="banner-copy">
           <p className="eyebrow"><Newspaper size={13} /> DAILY NEWS RADAR</p>
           <h2>먼저 넓게 보고<br />오늘의 흐름을 잡습니다.</h2>
-          <p className="banner-desc">경제·증권 기사는 폭넓게, 국제 기사는 금융시장 관련성을 기준으로 느슨하게 모았습니다. 제목을 빠르게 훑고 관심 가는 기사만 원문으로 확인하세요.</p>
+          <p className="banner-desc">경제·증권 기사는 폭넓게, 국제 기사는 금융시장 관련성을 기준으로 느슨하게 모았습니다. 제목과 핵심 맥락을 빠르게 훑고 관심 가는 기사만 원문으로 확인하세요.</p>
         </div>
         <div className="market-stamp"><span>NEWS</span><strong>RADAR</strong><i>{radarItems.length || "—"} HEADLINES</i></div>
       </section>
 
       <div className="content-heading">
         <div><p className="section-kicker">RADAR · {String(radarItems.length).padStart(2, "0")} HEADLINES</p><h3>경제·금융 헤드라인 훑기</h3></div>
-        <p>중요도를 강하게 선별하지 않은 넓은 뉴스 시야입니다.</p>
+        <p>키워드와 RSS 한 줄 요약은 빠른 맥락 파악을 위한 보조 정보입니다.</p>
       </div>
 
       {radarItems.length > 0 ? (
         <div className="border-b border-[#d3d0c7]">
-          {radarItems.map((item) => (
-            <a
-              key={item.url}
-              href={item.url}
-              target="_blank"
-              rel="noreferrer"
-              className="group grid grid-cols-[76px_minmax(0,1fr)_20px] items-center gap-4 border-t border-[#d3d0c7] py-4 text-inherit no-underline transition-colors hover:bg-[rgba(255,253,248,.42)] max-sm:grid-cols-[58px_minmax(0,1fr)_18px] max-sm:gap-3 max-sm:py-3"
-            >
-              <time className="text-[10px] font-medium tracking-[-0.02em] text-[#899195] max-sm:text-[9px]">{formatRadarTime(item.publishedAt)}</time>
-              <div className="min-w-0">
-                <p className="m-0 mb-1 text-[9px] font-bold tracking-[0.08em] text-[#b54835]">{item.source} · {item.section}</p>
-                <h4 className="m-0 break-keep font-['Noto_Serif_KR'] text-[15px] font-semibold leading-[1.55] tracking-[-0.035em] text-[#263846] transition-colors group-hover:text-[#b54835] max-sm:text-[14px]">{item.title}</h4>
-              </div>
-              <ExternalLink size={15} strokeWidth={1.7} className="text-[#92999b] transition-colors group-hover:text-[#b54835]" aria-hidden="true" />
-            </a>
-          ))}
+          {radarItems.map((item) => {
+            const keywords = item.keywords ?? [];
+            return (
+              <a
+                key={item.url}
+                href={item.url}
+                target="_blank"
+                rel="noreferrer"
+                className="group grid grid-cols-[76px_minmax(0,1.05fr)_minmax(260px,.95fr)_20px] items-start gap-5 border-t border-[#d3d0c7] py-4 text-inherit no-underline transition-colors hover:bg-[rgba(255,253,248,.42)] max-lg:grid-cols-[70px_minmax(0,1fr)_20px] max-lg:gap-4 max-sm:grid-cols-[58px_minmax(0,1fr)_18px] max-sm:gap-3 max-sm:py-3"
+              >
+                <time className="pt-1 text-[10px] font-medium tracking-[-0.02em] text-[#899195] max-sm:text-[9px]">{formatRadarTime(item.publishedAt)}</time>
+
+                <div className="min-w-0">
+                  <p className="m-0 mb-1 text-[9px] font-bold tracking-[0.08em] text-[#b54835]">{item.source} · {item.section}</p>
+                  <h4 className="m-0 break-keep font-['Noto_Serif_KR'] text-[15px] font-semibold leading-[1.55] tracking-[-0.035em] text-[#263846] transition-colors group-hover:text-[#b54835] max-sm:text-[14px]">{item.title}</h4>
+                </div>
+
+                <div className="min-w-0 max-lg:col-start-2 max-lg:col-end-3 max-lg:mt-1">
+                  {keywords.length > 0 && (
+                    <div className="mb-2 flex flex-wrap gap-1.5">
+                      {keywords.map((keyword) => (
+                        <span key={keyword} className="rounded-[2px] bg-[#e7e8e3] px-1.5 py-1 text-[9px] font-semibold leading-none text-[#53636b]">#{keyword}</span>
+                      ))}
+                    </div>
+                  )}
+                  {item.summary ? (
+                    <p className="m-0 line-clamp-2 break-keep text-[11px] leading-[1.7] text-[#66737a] max-sm:text-[10px]">{item.summary}</p>
+                  ) : (
+                    <p className="m-0 text-[10px] leading-[1.6] text-[#9aa1a3]">요약 정보 없음</p>
+                  )}
+                </div>
+
+                <ExternalLink size={15} strokeWidth={1.7} className="mt-1 text-[#92999b] transition-colors group-hover:text-[#b54835] max-lg:col-start-3 max-lg:row-start-1" aria-hidden="true" />
+              </a>
+            );
+          })}
         </div>
       ) : (
         <div className="border-y border-[#d3d0c7] py-10 text-center text-[12px] leading-7 text-[#69757b]">
